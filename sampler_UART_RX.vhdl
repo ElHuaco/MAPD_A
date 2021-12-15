@@ -16,13 +16,13 @@ end sampler;
 architecture my_sampler of sampler is
 
 	signal bau_cnt	: integer;
-	signal dly_cnt : integer;
+	signal dly_cnt : integer <= lambda;
 	signal pls_cnt	: integer;
 	signal enable	: std_logic <= '0';
 	signal pulse	: std_logic <= '0';
 
 begin
-	pulse_enabler	: process(clk)
+	start_detector	: process(clk)
 	begin
 		if rising_edge(clk) then
 			if enable = '0' then
@@ -32,7 +32,14 @@ begin
 					pls_cnt <= 0;
 					pulse <= '1';
 				end if;
-			elsif enable = '1' then
+			end if;
+		end if;
+	end process;
+
+	pulse_generator	: process(clk)
+	begin
+		if rising_edge(clk) then
+			if enable = '1' then
 				if pls_cnt = 9 then
 					enable <= '0';
 					pulse <= '0';
@@ -45,25 +52,22 @@ begin
 					pulse <= '1';
 				end if;
 			end if;
-		end if;
 	end process;
 
-	delayer			: process(clk, pulse)
+	delayer			: process(clk)
 	begin
 		if pulse = '1' then
 			dly_cnt = 0;
 		elsif rising_edge(clk) then
-			if enable <= '1' then
-				if dly_cnt < 434 then
-					dly_cnt <= dly_cnt + 1;
-					baudrate <= '0';
-				--- 1-clock-cycle pulse delayed 434.
-				elsif dly_cnt = 434 then
-					dly_cnt <= dly_cnt + 1;
-					baudrate <= '1';
-				else
-					baudrate <= '0';
-				end if;
+			if dly_cnt < 434 then
+				dly_cnt <= dly_cnt + 1;
+				baudrate <= '0';
+			--- 1-clock-cycle pulse delayed 434.
+			elsif dly_cnt = 434 then
+				dly_cnt <= dly_cnt + 1;
+				baudrate <= '1';
+			else
+				baudrate <= '0';
 			end if;
 		end if;
 	end process;
