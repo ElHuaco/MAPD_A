@@ -7,6 +7,7 @@ entity rec is
     port(clk : in std_logic;
         data : in std_logic;
         baud : in std_logic;
+        valid : out std_logic <= '0';
         y : out std_logic_vector(7 downto 0));
 end entity rec;
 
@@ -65,6 +66,7 @@ begin
                 when st8 =>
                     if baud = '1';
                         state <= ende;
+                        valid = '1';
                     end if;
                 when ende =>
                     if baud = '1';
