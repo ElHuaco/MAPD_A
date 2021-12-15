@@ -19,7 +19,7 @@ architecture behave of UART_Receiver is
             y : out std_logic_vector(7 downto 0));
     end component;
 
-    component sample_gen is
+    component sampler_UART_RX is
         port(clk : in std_logic;
             data : in std_logic;
             baud : out std_logic);
