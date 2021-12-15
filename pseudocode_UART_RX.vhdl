@@ -31,21 +31,10 @@ begin
 
 	pulse_generator	: process(clk, start)
 	begin
-	---for 10 times
-	---		generate a pulse for one clock cycle
-	---		each 868 clock cycles.
-	---start <= '0'
-		if start <= '1' then
+		if start = '1' then
 			for iterations in 0 to 9 loop
-				if rising_edge(clk) then
-					clk_cnt <= clk_cnt + 1;
-					if clk_cnt = lambda then
-						pulse <= '1';
-						clk_cnt <= 0
-					elsif
-						pulse <= '0';
-					end if;
-				end if;
+			---How to call baud(clk<=clk, y<=pulse)
+			--- here?
 			end loop;
 			start <= '0';
 		end if;
