@@ -48,7 +48,7 @@ begin
 		end if;
 	end process;
 
-	delayer			: process(pulse)
+	delayer			: process(clk, pulse)
 	begin
 		if pulse = '1' then
 			dly_cnt = 0;
@@ -62,7 +62,7 @@ begin
 					dly_cnt <= dly_cnt + 1;
 					baudrate <= '1';
 				else
-					baud_rate <= '0';
+					baudrate <= '0';
 				end if;
 			end if;
 		end if;
