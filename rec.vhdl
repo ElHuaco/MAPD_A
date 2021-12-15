@@ -72,6 +72,7 @@ begin
                     if baud = '1';
                         state <= idle;
                         valid <= '0';
+
                     end if;
                 when others =>
                     null;
