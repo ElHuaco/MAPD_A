@@ -43,7 +43,7 @@ begin
 				if pls_cnt = 9 then
 					enable <= '0';
 					pulse <= '0';
-				elsif bau_cnt /= lambda then
+				elsif bau_cnt < lambda then
 					bau_cnt <= bau_cnt + 1;
 					pulse <= '0';
 				else
@@ -52,6 +52,7 @@ begin
 					pulse <= '1';
 				end if;
 			end if;
+		end if;
 	end process;
 
 	delayer			: process(clk)
