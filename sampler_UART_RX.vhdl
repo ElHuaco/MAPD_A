@@ -13,41 +13,78 @@ entity sampler_UART_RX is
 end sampler_UART_RX;
 
 architecture my_sampler of sampler_UART_RX is
+    type state_t is (idle_s, start_s, bit0_s, bit1_s, bit2_s, bit3_s, bit4_s, bit5_s, bit6_s, bit7_s, bit8_s, stop_s);
+    signal state : state_t := idle_s;
 
-	signal bau_cnt	: integer := 0;
-	signal dly_cnt : integer := lambda;
-	signal pls_cnt	: integer;
-	signal enable	: std_logic := '0';
-	signal pulse	: std_logic := '0';
+    signal enable_pulse    : std_logic := '0';
+	signal pulse           : std_logic := '0';
+	signal baud_cnt        : integer := 0;
+	signal delay_cnt       : integer := lambda;
+	signal enable_delay    : std_logic := '0';
 
 begin
-	start_detector	: process(clk)
-	begin
-		if rising_edge(clk) then
-			if enable = '0' then
-				if data = '0' then
-					enable <= '1';
-					pls_cnt <= 0;
-					pulse <= '1';
-				end if;
-			end if;
-		end if;
-	end process;
+    --Need state machine because the same signal (enable_pulse)
+    --cannot be changed in different processes (start_stop_detector and pulse_generator).
+	start_stop_detector	: process(clk)
+    begin
+        if rising_edge(clk) then
+          case state is
+            when idle_s =>
+                enable_pulse <= '0';
+                if data = '0' then
+                  state <= start_s;
+                end if;
+              when start_s =>
+                enable_pulse <= '1';
+                if pulse = '1' then
+                  state <= bit0_s;
+                end if;
+              when bit0_s =>
+                if pulse = '1' then
+                  state <= bit1_s;
+                end if;
+              when bit1_s =>
+                if pulse = '1' then
+                  state <= bit2_s;
+                end if;
+              when bit2_s =>
+                if pulse = '1' then
+                  state <= bit3_s;
+                end if;
+              when bit3_s =>
+                if pulse = '1' then
+                  state <= bit4_s;
+                end if;
+              when bit4_s =>
+                if pulse = '1' then
+                  state <= bit5_s;
+                end if;
+              when bit5_s =>
+                if pulse = '1' then
+                  state <= bit6_s;
+                end if;
+              when bit6_s =>
+                if pulse = '1' then
+                  state <= bit7_s;
+                end if;
+              when bit7_s =>
+                if pulse = '1' then
+                  state <= idle_s;
+                end if;
+              when others => null;
+            end case;
+        end if;
+    end process;
 
 	pulse_generator	: process(clk)
 	begin
 		if rising_edge(clk) then
-			if enable = '1' then
-				if pls_cnt = 9 then
-					enable <= '0';
-					pulse <= '0';
-					bau_cnt <= 0;
-				elsif bau_cnt < lambda then
-					bau_cnt <= bau_cnt + 1;
+			if enable_pulse = '1' then
+				if baud_cnt < lambda then
+					baud_cnt <= baud_cnt + 1;
 					pulse <= '0';
 				else
-					bau_cnt <= 0;
-					pls_cnt <= pls_cnt + 1;
+					baud_cnt <= 0;
 					pulse <= '1';
 				end if;
 			end if;
@@ -57,14 +94,14 @@ begin
 	delayer			: process(clk, pulse)
 	begin
 		if pulse = '1' then
-			dly_cnt <= 0;
+			delay_cnt <= 0;
 		elsif rising_edge(clk) then
-			if dly_cnt < 434 then
-				dly_cnt <= dly_cnt + 1;
+			if delay_cnt < 434 then
+				delay_cnt <= delay_cnt + 1;
 				baudrate <= '0';
 			--- 1-clock-cycle pulse delayed 434.
-			elsif dly_cnt = 434 then
-				dly_cnt <= dly_cnt + 1;
+			elsif delay_cnt = 434 then
+				delay_cnt <= delay_cnt + 1;
 				baudrate <= '1';
 			else
 				baudrate <= '0';
