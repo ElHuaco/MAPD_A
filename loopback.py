@@ -1,9 +1,11 @@
-import serial 
+import serial
 
+ser = serial.Serial('COM4', baudrate=115200)
+d = [175, 0b11010000, 0b11110000, 0b01110000, 0b01010000, 0b00110000, 0b00010000, 0b10110000]
+f = [79, 80, 64, 16, 10, 16]
 
-x = input('Insert name given to serial port:')
-ser = serial.Serial(x, baudrate = 115200)
-for i in range(10):
+for i in f:
 	ser.write(chr(i).encode())
 	d = ser.read()
 	print(ord(d))
+

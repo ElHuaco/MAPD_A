@@ -1,27 +1,32 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
 
 entity baud is
-    generic ( constant lambda : integer:= 868 );
-    port ( clk : in std_logic;
-            y : out std_logic);
-end baud;
 
-architecture Behavioral of baud is
-    signal counter : integer :=1;
-    begin
-        baud : process(clk) is
-        begin
-        if falling_edge(clk) then
-            counter <=  counter + 1;
-        elsif counter = lambda then
-            y <= '1';
-            counter <= 0;
-        elsif counter = 0 then
-            y <= '1';
-        else
-            y <= '0';
-        end if;
-    end process;
-end Behavioral;
+  port (
+    clk        : in  std_logic;
+    baudrate_out : out std_logic);
+
+end entity baud;
+
+
+architecture rtl of baud is
+  signal counter   : unsigned(9 downto 0) := (others => '0');
+  constant divisor : unsigned(9 downto 0) := to_unsigned(867, 10);
+begin  -- architecture rtl
+  main : process (clk) is
+  begin  -- process main
+    if rising_edge(clk) then          -- rising clock edge
+      counter <= counter + 1;
+      if counter = divisor then
+        baudrate_out <= '1';
+        counter      <= (others => '0');
+      else
+        baudrate_out <= '0';
+      end if;
+    end if;
+  end process main;
+
+end architecture rtl;
