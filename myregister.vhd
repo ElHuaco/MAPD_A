@@ -8,10 +8,10 @@ entity myregister is
         clk : in std_logic;
         valid : in std_logic;
         data_in : in std_logic_vector(7 downto 0); --we should use the first "something" bits to specify a register and then the other ones to perform an operation on it
-        data_out_1 : out std_logic_vector(7 downto 0):= "0000";
-        data_out_2 : out std_logic_vector(7 downto 0):= "0000";
-        data_out_3 : out std_logic_vector(7 downto 0):= "0000";
-        data_out_4 : out std_logic_vector(7 downto 0):= "0000"
+        data_out_1 : out std_logic_vector(7 downto 0);
+        data_out_2 : out std_logic_vector(7 downto 0);
+        data_out_3 : out std_logic_vector(7 downto 0);
+        data_out_4 : out std_logic_vector(7 downto 0)
         
     );
 end entity myregister;
@@ -22,10 +22,7 @@ architecture behavioral of myregister is
     type regArray is array(3 downto 0) of std_logic_vector(3 downto 0);
     signal registers : regArray := (others => (others => '0'));
 begin
-    data_out_1 <= "0000" & registers(0);
-    data_out_2 <= "0000" & registers(1);
-    data_out_3 <= "0000" & registers(2);
-    data_out_4 <= "0000" & registers(3);
+
     frank : process(clk)
     begin
      if(rising_edge(clk)) then
@@ -43,7 +40,14 @@ begin
      end if;
      end if;
      end if;
+     
+    data_out_1 <= "0000" & registers(0);
+    data_out_2 <= "0000" & registers(1);
+    data_out_3 <= "0000" & registers(2);
+    data_out_4 <= "0000" & registers(3);
 end process;
 
+
+    
 end behavioral;
 
