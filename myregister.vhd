@@ -28,15 +28,7 @@ begin
      if(rising_edge(clk)) then
      if(valid = '1') then
      if(data_in(4) = '0') then
-        if to_integer(unsigned(data_in(6 downto 5))) = 0 then
-            registers(0) <= data_in(3 downto 0);
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 1 then
-            registers(1) <= data_in(3 downto 0);
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 2 then
-            registers(2) <= data_in(3 downto 0);
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 3 then
-            registers(3) <= data_in(3 downto 0);
-        end if;
+        registers(to_integer(unsigned(data_in(6 downto 5)))) <= data_in(3 downto 0);
      end if;
      end if;
      end if;
