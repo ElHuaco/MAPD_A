@@ -5,7 +5,7 @@ entity UART_TX is
          valid      : in std_logic;
          data_in    : in std_logic_vector(7 downto 0);
          busy       : out std_logic;
-         UART_tx    : out std_logic);
+         UART_tx_1    : out std_logic);
 end UART_TX;
 
 architecture rtl of UART_TX is
@@ -30,5 +30,5 @@ architecture rtl of UART_TX is
 
 begin
     baud_generator : baud_UART_TX port map(clk=>clk, y=>baudrate, enabler=>enable_baud);
-    state_machine : main_UART_TX port map(clk=>clk, baud=>baudrate, valid=>valid, data_in=>data_in, busy=>busy, y=>UART_tx, enable_baud=>enable_baud);
+    state_machine : main_UART_TX port map(clk=>clk, baud=>baudrate, valid=>valid, data_in=>data_in, busy=>busy, y=>UART_tx_1, enable_baud=>enable_baud);
 end rtl;

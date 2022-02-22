@@ -14,12 +14,10 @@ entity top is
 end entity top;
 
 architecture str of top is
-  signal clock        : std_logic;
   signal data_to_send_1 : std_logic_vector(7 downto 0) := X"61";
   signal data_to_send_2 :  std_logic_vector(7 downto 0);
   signal data_valid   : std_logic;
   signal busy         : std_logic;
-  signal uart_tx      : std_logic;
   signal data_out_1   : std_logic_vector(7 downto 0);
   signal data_out_2   : std_logic_vector(7 downto 0);
   signal data_out_3   :  std_logic_vector(7 downto 0);
@@ -27,14 +25,15 @@ architecture str of top is
   signal valid_out    : std_logic;
  
 
-  component uart_transmitter is
+  component UART_TX is
     port (
-      clock        : in  std_logic;
-      data_to_send : in  std_logic_vector(7 downto 0);
-      data_valid   : in  std_logic;
+      clk        : in  std_logic;
+      data_in : in  std_logic_vector(7 downto 0);
+      valid   : in  std_logic;
       busy         : out std_logic;
-      uart_tx      : out std_logic);
-  end component uart_transmitter;
+      UART_tx_1      : out std_logic);
+  end component UART_TX;
+
 
   component myregister is
     port (
@@ -65,26 +64,25 @@ component selector is
     );
 end component selector;
 
-
-  component uart_receiver is
+  component UART_RX is
     port (
-      clock         : in  std_logic;
-      uart_rx       : in  std_logic;
+      clk         : in  std_logic;
+      data       : in  std_logic;
       valid         : out std_logic;
-      received_data : out std_logic_vector(7 downto 0));
-  end component uart_receiver;
+      UART_rx_1 : out std_logic_vector(7 downto 0));
+  end component UART_RX;
+  
 begin  -- architecture str
 
-  uart_receiver_1 : uart_receiver
+  uart_receiver_1 : UART_RX
 
     port map (
-      clock         => CLK100MHZ,
-      uart_rx       => uart_txd_in,
+      clk         => CLK100MHZ,
+      data       => uart_txd_in,
       valid         => data_valid,
-      received_data => data_to_send_1);
+      UART_rx_1 => data_to_send_1);
       
-      
-  myregister_1 : myregister
+    myregister_1 : myregister
  
     port map (
      clk         => CLK100MHZ,
@@ -108,14 +106,13 @@ begin  -- architecture str
      data_out => data_to_send_2,
      valid => data_valid,
      valid_out => valid_out); 
-     
       
-  uart_transmitter_1 : uart_transmitter
+  uart_transmitter_1 : UART_TX
     port map (
-      clock        => CLK100MHZ,
-      data_to_send => data_to_send_2,
-      data_valid   => valid_out,
+      clk        => CLK100MHZ,
+      data_in => data_to_send_2,
+      valid   => valid_out,
       busy         => busy,
-      uart_tx      => uart_rxd_out);
+      UART_tx_1      => uart_rxd_out);
 
 end architecture str;
