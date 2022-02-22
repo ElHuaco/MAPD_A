@@ -39,16 +39,7 @@ begin
         data_out <= registers(to_integer(unsigned(data_in(6 downto 5)))) + registers(to_integer(unsigned(data_in(2 downto 1))));
      else
         valid_out <= '1';
-        if to_integer(unsigned(data_in(6 downto 5))) = 0 then
-            data_out <= data_in_1;
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 1 then
-            data_out <= data_in_2;
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 2 then
-            data_out <= data_in_3;
-        elsif to_integer(unsigned(data_in(6 downto 5))) = 3 then
-            data_out <= data_in_4;
-        end if;
-     
+        data_out <= registers(to_integer(unsigned(data_in(6 downto 5))));
      end if;
      else valid_out <= '0';
      end if;
