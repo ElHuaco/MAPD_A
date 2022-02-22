@@ -1,8 +1,8 @@
 import serial
 
 ser = serial.Serial('COM4', baudrate=115200)
-d = [175, 0b11010000, 0b11110000, 0b01110000, 0b01010000, 0b00110000, 0b00010000, 0b10110000]
-f = [10, 42, 18]
+
+f = [0b0001010, 0b0101011, 0b0011000, 0b0111000, 0b0110000]
 
 for i in f:
 	ser.write(chr(i).encode())
