@@ -17,8 +17,6 @@ entity myregister is
 end entity myregister;
 
 architecture behavioral of myregister is
-    signal rw : std_logic;
-    signal reg : std_logic_vector(1 downto 0);
     type regArray is array(3 downto 0) of std_logic_vector(3 downto 0);
     signal registers : regArray := (others => (others => '0'));
 begin
